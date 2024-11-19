@@ -11,7 +11,83 @@ import '../styles/style.css'
 import { fetchWeatherData, WeatherData } from './weather-app-fetch'
 import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB } from './utils'
 
-const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon']
+const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
+let weatherDataResults:WeatherData[] = [];
+let london:WeatherData = {
+    resolvedAddress: 'London',
+    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+    currentConditions: {
+        feelslike: 0,
+        temp: 0
+    },
+    days: [{
+        icon: 'rain',
+        tempmin: 0.0,
+        tempmax: 0.0
+    }]
+}
+
+let berlin:WeatherData = {
+    resolvedAddress: 'Berlin',
+    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+    currentConditions: {
+        feelslike: 0,
+        temp: 0
+    },
+    days: [{
+        icon: 'clear-day',
+        tempmin: 0.0,
+        tempmax: 0.0
+    }]
+}
+
+let gloria:WeatherData = {
+    resolvedAddress: 'Glória do Ribatejo',
+    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+    currentConditions: {
+        feelslike: 0,
+        temp: 0
+    },
+    days: [{
+        icon: 'clear-day',
+        tempmin: 0.0,
+        tempmax: 0.0
+    }]
+}
+
+let muge:WeatherData = {
+    resolvedAddress: 'Muge',
+    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+    currentConditions: {
+        feelslike: 0,
+        temp: 0
+    },
+    days: [{
+        icon: 'snow',
+        tempmin: 0.0,
+        tempmax: 0.0
+    }]
+}
+
+let porto:WeatherData = {
+    resolvedAddress: 'Porto Alto',
+    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+    currentConditions: {
+        feelslike: 0,
+        temp: 0
+    },
+    days: [{
+        icon: 'partly-cloudy-day',
+        tempmin: 0.0,
+        tempmax: 0.0
+    }]
+}
+
+weatherDataResults.push(london);
+weatherDataResults.push(berlin);
+weatherDataResults.push(gloria);
+weatherDataResults.push(muge);
+weatherDataResults.push(porto);
 
 const emojiResults = (desc:string):string => {
     let result:string = '';
@@ -22,6 +98,8 @@ const emojiResults = (desc:string):string => {
         result = '☁️';
     } else if(desc.includes('clear-day')) {
         result = '☀️';
+    } else if(desc.includes('snow')) {
+        result = '❄️';
     }
 
     return result;
@@ -29,7 +107,7 @@ const emojiResults = (desc:string):string => {
 
 const createEmptyCityDiv = (containerLoadDiv: HTMLElement, id: number):void => {
     const cityDiv = document.createElement('div'); 
-    const classListInitialContainers:string = 'bg-white shadow rounded-lg p-6 opacity-80';
+    const classListInitialContainers:string = 'bg-white shadow rounded-lg p-6 opacity-80 text-xl';
 
     cityDiv.className = classListInitialContainers;
     cityDiv.id = `weather-results-${id}`;
@@ -62,27 +140,29 @@ const initialCitiesLoad = async ():Promise<void> => {
     }
 
     weatherDataResults.forEach((resultSearch:WeatherData) => {
-        const cityNameP:HTMLElement = document.createElement('p');
+        // The below code should be in a different method.
+        const cityNameP:HTMLElement = document.createElement('h2');
         const currTempP:HTMLElement = document.createElement('p');
         const currWeatherStatus:HTMLElement = document.createElement('p');
+        const descriptionWeather:HTMLElement = document.createElement('p');
         const cityDiv:HTMLElement = document.getElementById(`weather-results-${idxCity}`)!;
-        idxCity++;
-                
+        
         cityNameP.style.textAlign = 'center';
         cityNameP.style.fontWeight = 'bold';
 
         currWeatherStatus.style.textAlign = 'center';
-        currWeatherStatus.style.fontSize = '30px';
+        currWeatherStatus.style.fontSize = '40px';
         
         if(resultSearch.resolvedAddress) {
-            cityNameP.textContent = cleanCityNames(resultSearch.resolvedAddress);
-            currTempP.textContent = `${convertFarToCel(resultSearch.days[0].tempmin).toString()}ºC`;
-            currWeatherStatus.textContent = `${emojiResults(resultSearch.days[0].icon)}`;
-            // console.log(`Emoji = ${emojiResults(resultSearch.days[0].icon)}`);
+            cityNameP.innerHTML = `${cleanCityNames(resultSearch.resolvedAddress)}`;
+            currTempP.innerHTML = `${convertFarToCel(resultSearch.days[0].tempmin).toString()}ºC`;
+            currWeatherStatus.innerHTML = `${emojiResults(resultSearch.days[0].icon)}`;
+            descriptionWeather.textContent = resultSearch.description;
             
             cityDiv.appendChild(cityNameP);
             cityDiv.appendChild(currTempP);
             cityDiv.appendChild(currWeatherStatus);
+            cityDiv.appendChild(descriptionWeather);
             gridWeatherResults.appendChild(cityDiv);
         } else {
             cityNameP.textContent = `City data for ${cities[idxCity]} not available.`;
@@ -90,6 +170,7 @@ const initialCitiesLoad = async ():Promise<void> => {
             gridWeatherResults.appendChild(cityDiv);
         }
 
+        idxCity++;
         console.log(resultSearch); // Debug of JSON results
     });
 }
@@ -137,4 +218,67 @@ window.onload = () => {
     initialCitiesLoad();
 }
 
+const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
+    const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
+    gridWeatherResults.innerHTML = '';
+
+    // awaits is missing
+
+    let marinhaisResults:WeatherData = {
+        resolvedAddress: 'Marinhais',
+        description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+        currentConditions: {
+            feelslike: 0,
+            temp: 0
+        },
+        days: [{
+            icon: 'rain',
+            tempmin: 0.0,
+            tempmax: 0.0
+        }]
+    }
+
+    createEmptyCityDiv(gridWeatherResults, 0);
+    const cityNameP:HTMLElement = document.createElement('h2');
+    const currTempP:HTMLElement = document.createElement('p');
+    const currWeatherStatus:HTMLElement = document.createElement('p');
+    const descriptionWeather:HTMLElement = document.createElement('p');
+    const cityDiv:HTMLElement = document.getElementById('weather-results-0')!;
+    const gridDiv:HTMLElement = document.getElementById('grid-weather-results')!;
+
+    let currentClassListCityDiv: string = cityDiv.classList.toString();
+    let newCityDivClassList: string = currentClassListCityDiv + ' h-96 mx-auto justify-center text-2xl w-96';
+    cityDiv.className = newCityDivClassList;
+
+    gridDiv.className = 'flex justify-center';
+    
+    cityNameP.style.textAlign = 'center';
+    cityNameP.style.fontWeight = 'bold';
+
+    currWeatherStatus.style.textAlign = 'center';
+    currWeatherStatus.style.fontSize = '40px';
+    
+    if(marinhaisResults.resolvedAddress) {
+        cityNameP.innerHTML = `${cleanCityNames(marinhaisResults.resolvedAddress)}`;
+        currTempP.innerHTML = `${convertFarToCel(marinhaisResults.days[0].tempmin).toString()}ºC`;
+        currWeatherStatus.innerHTML = `${emojiResults(marinhaisResults.days[0].icon)}`;
+        descriptionWeather.textContent = marinhaisResults.description;
+        
+        cityDiv.appendChild(cityNameP);
+        cityDiv.appendChild(currTempP);
+        cityDiv.appendChild(currWeatherStatus);
+        cityDiv.appendChild(descriptionWeather);
+        gridWeatherResults.appendChild(cityDiv);
+    } else {
+        cityNameP.textContent = `City data for ${cities[0]} not available.`;
+        cityDiv.appendChild(cityNameP);
+        gridWeatherResults.appendChild(cityDiv);
+    }
+};
+
+const searchButton: HTMLElement = document.getElementById('search-button')!;
+const cityInputText = <HTMLInputElement> document.getElementById('city-search-term')!;
+searchButton?.addEventListener('click', () => {
+    searchIndividualStatsCity(cityInputText.value!);
+});
 

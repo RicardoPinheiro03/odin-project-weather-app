@@ -1,12 +1,13 @@
 const FARENHEIT_CONSTANT = 32;
 
 export const convertFarToCel = (fTemp: number):number => {
-    // console.log("FARHNEIT TEMP = " + fTemp);
-    // console.log("FARENHEIT_CONSTANT = " + FARENHEIT_CONSTANT);
     let cTemp:number;
+    let fResult:number;
+    
     cTemp = (fTemp - FARENHEIT_CONSTANT) * 5 / 9;
-    console.log(`Celsius temperature ${cTemp}`);
-    return parseFloat(Math.round(cTemp).toFixed(1));
+    fResult = parseFloat(cTemp.toPrecision(1));
+
+    return fResult;
 }
 
 export const cleanCityNames = (cityName:string):string => {

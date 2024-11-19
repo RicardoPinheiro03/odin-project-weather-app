@@ -37,6 +37,10 @@ ul.breadcrumb li span {
   background-color: #1f2937;
 }
 
+p {
+  line-height: 35px;
+}
+
 
 /* :root {
   
