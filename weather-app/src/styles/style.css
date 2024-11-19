@@ -37,16 +37,6 @@ ul.breadcrumb li span {
   background-color: #1f2937;
 }
 
-@media screen and (max-width: 768px) {
-  .container-weather-wrapper {
-      flex-direction: column; /* Stack containers vertically */
-      align-items: center; /* Center-align containers */
-  }
-  .container {
-      width: 90%; /* Make containers take most of the screen width */
-  }
-}
-
 
 /* :root {
   
