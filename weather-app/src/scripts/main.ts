@@ -8,7 +8,7 @@
 
 import '../styles/style.css'
 import { fetchWeatherData, WeatherData } from './weather-app-fetch'
-import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB } from './utils'
+import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB, delay } from './utils'
 
 const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
 let weatherDataResults:WeatherData[] = [];
@@ -175,43 +175,56 @@ const initialCitiesLoad = async ():Promise<void> => {
 }
 
 const createAndAttachLoadingStatus = (htmlElementToAttach:HTMLElement): void => {
-    const svgNodeClass:string = 'w-20 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600';
+    const svgNodeID:string = 'loading-div-svg';
+    const svgNodeClass:string = 'w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600';
     const svgNodeViewBox:string = '0 0 100 101';
     const svgNodeFill:string = 'none';
     const svgNodeXmlns:string = 'http://www.w3.org/2000/svg';
-    const svgNodeID:string = 'loading-div-svg';
 
-    const loadingDiv:HTMLElement = document.createElement('div');
-    loadingDiv.setAttribute('id', svgNodeID);
-    loadingDiv.setAttribute('role', 'status');
+    // Create div section for the spinning SVG
+    const loadingSection:HTMLElement = document.createElement('div');
+    loadingSection.setAttribute('id', svgNodeID);
+    loadingSection.setAttribute('role', 'status');
 
-    const loadingSVG:HTMLElement = document.createElement('svg');
-    loadingSVG.setAttribute('aria-hidden', 'true');
-    loadingSVG.setAttribute('class', svgNodeClass);
-    loadingSVG.setAttribute('viewBox', svgNodeViewBox);
-    loadingSVG.setAttribute('fill', svgNodeFill);
-    loadingSVG.setAttribute('xmlns', svgNodeXmlns);
+    // Create SVG element
+    const svgElement = document.createElementNS(svgNodeXmlns, 'svg') as SVGSVGElement;
+    svgElement.setAttribute('class', svgNodeClass);
+    svgElement.setAttribute('aria-hidden', 'true');
+    svgElement.setAttribute('viewBox', svgNodeViewBox);
+    svgElement.setAttribute('fill', svgNodeFill);
+    svgElement.setAttribute('xmlns', svgNodeXmlns);
 
-    const loadingPathAElement:HTMLElement = document.createElement('path');
-    const loadingPathBElement:HTMLElement = document.createElement('path');
+    // Create 2 paths to be appended into the SVG element
+    const loadingPathAElement = document.createElementNS(svgNodeXmlns, 'path');
+    const loadingPathBElement = document.createElementNS(svgNodeXmlns, 'path');
     loadingPathAElement.setAttribute('d', loadingPathA);
     loadingPathAElement.setAttribute('fill', 'currentColor');
     loadingPathBElement.setAttribute('d', loadingPathB);
-    loadingPathBElement.setAttribute('fill', 'currentColor');
+    loadingPathBElement.setAttribute('fill', 'currentFill');
 
-    loadingSVG.appendChild(loadingPathAElement);
-    loadingSVG.appendChild(loadingPathBElement);
+    svgElement.appendChild(loadingPathAElement);
+    svgElement.appendChild(loadingPathBElement);
 
-    loadingDiv.appendChild(loadingSVG);
+    loadingSection.appendChild(svgElement);
 
-    htmlElementToAttach.appendChild(loadingDiv);
+    htmlElementToAttach.appendChild(loadingSection);
 };
 
-const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
-    let fetchResults:WeatherData;
-    const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
-    gridWeatherResults.innerHTML = '';
+const cleanDivInnerHTML = (element: HTMLElement):void => {
+    element.innerHTML = '';
+}
 
+const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
+    const spinnerCityDivClass:string = ' h-96 mx-auto justify-center text-2xl w-96 flex items-center';
+    const cityDivClass:string = 'bg-white shadow rounded-lg p-6 opacity-80 text-xl h-96 mx-auto justify-center text-2xl w-96';
+    
+    let fetchResults:WeatherData; // Results from the Weather API call
+    
+    // Clean current div containing the default cities
+    const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
+    cleanDivInnerHTML(gridWeatherResults);
+
+    // Create empty bigger div for individual location
     createEmptyCityDiv(gridWeatherResults, 0);
     const cityNameP:HTMLElement = document.createElement('h2');
     const currTempP:HTMLElement = document.createElement('p');
@@ -220,8 +233,9 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     const cityDiv:HTMLElement = document.getElementById('weather-results-0')!;
     const gridDiv:HTMLElement = document.getElementById('grid-weather-results')!;
 
+    // Change dimensions of the container to be larger than the default one
     let currentClassListCityDiv: string = cityDiv.classList.toString();
-    let newCityDivClassList: string = currentClassListCityDiv + ' h-96 mx-auto justify-center text-2xl w-96';
+    let newCityDivClassList: string = currentClassListCityDiv + spinnerCityDivClass; // Align spinner to the vertical center of the div
     cityDiv.className = newCityDivClassList;
 
     gridDiv.className = 'flex justify-center';
@@ -233,42 +247,45 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     currWeatherStatus.style.fontSize = '40px';
     createAndAttachLoadingStatus(cityDiv);
     
-    // const heroDiv:HTMLElement = document.getElementById('hero-test')!;
-    // createAndAttachLoadingStatus(heroDiv);
-
     try {
-        setTimeout(() => {
-            cityNameP.innerHTML = 'Sanity test';
-            cityDiv.appendChild(cityNameP);
-        }, 2000);
-        // fetchResults = await fetchWeatherData(cityName);
+        await delay(2000);
+        fetchResults = await fetchWeatherData(cityName);
     } finally {
         const loadingElement:HTMLElement = document.getElementById('loading-div-svg')!;
-        // loadingElement.innerHTML = '';
+        cityDiv.removeChild(loadingElement);
+
+        let newCityDivClassList: string = cityDivClass; 
+        cityDiv.className = newCityDivClassList;
     }
 
-    // if(fetchResults.resolvedAddress) {
-    //     cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress)}`;
-    //     currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
-    //     currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
-    //     descriptionWeather.textContent = fetchResults.description;
+    // Deserialize fetch into the container of the results
+    if(fetchResults.resolvedAddress) {
+        cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress)}`;
+        currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
+        currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
+        descriptionWeather.textContent = fetchResults.description;
         
-    //     cityDiv.appendChild(cityNameP);
-    //     cityDiv.appendChild(currTempP);
-    //     cityDiv.appendChild(currWeatherStatus);
-    //     cityDiv.appendChild(descriptionWeather);
-    //     gridWeatherResults.appendChild(cityDiv);
-    // } else {
-    //     cityNameP.textContent = `City data for ${cities[0]} not available.`;
-    //     cityDiv.appendChild(cityNameP);
-    //     gridWeatherResults.appendChild(cityDiv);
-    // }
+        cityDiv.appendChild(cityNameP);
+        cityDiv.appendChild(currTempP);
+        cityDiv.appendChild(currWeatherStatus);
+        cityDiv.appendChild(descriptionWeather);
+        gridWeatherResults.appendChild(cityDiv);
+    } else {
+        cityNameP.textContent = `City data for ${cityName} not available.`;
+        cityDiv.appendChild(cityNameP);
+        gridWeatherResults.appendChild(cityDiv);
+    }
 };
+
 
 const searchButton: HTMLElement = document.getElementById('search-button')!;
 const cityInputText = <HTMLInputElement> document.getElementById('city-search-term')!;
 searchButton?.addEventListener('click', () => {
-    searchIndividualStatsCity(cityInputText.value!);
+    // If the input is a number or empty, reject the form submit
+    if(!isNaN(Number(cityInputText.value)) || cityInputText.value === '')
+        alert('Please introduce a valid city name.');
+    else
+        searchIndividualStatsCity(cityInputText.value!);
 });
 
 window.onload = () => {
