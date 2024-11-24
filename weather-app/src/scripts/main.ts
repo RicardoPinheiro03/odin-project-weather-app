@@ -1,11 +1,10 @@
 // ToDo List:
-    // Add events for search here
-    // Add form validation
-    // Add favourite cities to know how to work with the LocalStorage
-    // Add animation when the results are fetched
-    // Add expanding containers when clicking on the containers themselves & add grid with containers inside
+    // [ ] Add form validation
+    // [ ] Add favourite cities to know how to work with the LocalStorage
+    // [ ] Add animation when the results are fetched
+    // [ ] Add expanding containers when clicking on the containers themselves & add grid with containers inside
     // ------------------------------------------------------------------
-    // Deploy this to GH Pages using the methods shown on TOP or that Medium article
+    // [ ] Deploy this to GH Pages using the methods shown on TOP or that Medium article
 
 import '../styles/style.css'
 import { fetchWeatherData, WeatherData } from './weather-app-fetch'
@@ -119,7 +118,7 @@ const createEmptyCityDiv = (containerLoadDiv: HTMLElement, id: number):void => {
 const initialCitiesLoad = async ():Promise<void> => {
     let idxCity: number = 0;
     let idxCityDivSearch: number = 0;
-    let weatherDataResults:WeatherData[];
+    // let weatherDataResults:WeatherData[];
     const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
     
     // Create initial containers
@@ -130,14 +129,14 @@ const initialCitiesLoad = async ():Promise<void> => {
         // createAndAttachLoadingStatus(emptyCityDiv);
     }
     
-    try {
-        weatherDataResults = await Promise.all(
-            cities.map((cityName) => fetchWeatherData(cityName))
-        );
-    }
-    finally {
-        // document.getElementById('loading-div-svg').innerHTML = '';
-    }
+    // try {
+    //     weatherDataResults = await Promise.all(
+    //         cities.map((cityName) => fetchWeatherData(cityName))
+    //     );
+    // }
+    // finally {
+    //     // document.getElementById('loading-div-svg').innerHTML = '';
+    // }
 
     weatherDataResults.forEach((resultSearch:WeatherData) => {
         // The below code should be in a different method.
@@ -171,24 +170,20 @@ const initialCitiesLoad = async ():Promise<void> => {
         }
 
         idxCity++;
-        console.log(resultSearch); // Debug of JSON results
+        // console.log(resultSearch); // Debug of JSON results
     });
 }
 
 const createAndAttachLoadingStatus = (htmlElementToAttach:HTMLElement): void => {
-    const svgNodeClass:string = `w-8 
-                                h-8 
-                                text-gray-200 
-                                animate-spin 
-                                dark:text-gray-600 
-                                fill-blue-600`;
-    const svgNodeViewBox:string = `0 0 100 101`;
+    const svgNodeClass:string = 'w-20 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600';
+    const svgNodeViewBox:string = '0 0 100 101';
     const svgNodeFill:string = 'none';
     const svgNodeXmlns:string = 'http://www.w3.org/2000/svg';
     const svgNodeID:string = 'loading-div-svg';
 
     const loadingDiv:HTMLElement = document.createElement('div');
     loadingDiv.setAttribute('id', svgNodeID);
+    loadingDiv.setAttribute('role', 'status');
 
     const loadingSVG:HTMLElement = document.createElement('svg');
     loadingSVG.setAttribute('aria-hidden', 'true');
@@ -209,34 +204,13 @@ const createAndAttachLoadingStatus = (htmlElementToAttach:HTMLElement): void => 
 
     loadingDiv.appendChild(loadingSVG);
 
-    console.log(htmlElementToAttach);
-
     htmlElementToAttach.appendChild(loadingDiv);
 };
 
-window.onload = () => {
-    initialCitiesLoad();
-}
-
 const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
+    let fetchResults:WeatherData;
     const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
     gridWeatherResults.innerHTML = '';
-
-    // awaits is missing
-
-    let marinhaisResults:WeatherData = {
-        resolvedAddress: 'Marinhais',
-        description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-        currentConditions: {
-            feelslike: 0,
-            temp: 0
-        },
-        days: [{
-            icon: 'rain',
-            tempmin: 0.0,
-            tempmax: 0.0
-        }]
-    }
 
     createEmptyCityDiv(gridWeatherResults, 0);
     const cityNameP:HTMLElement = document.createElement('h2');
@@ -257,23 +231,38 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
 
     currWeatherStatus.style.textAlign = 'center';
     currWeatherStatus.style.fontSize = '40px';
+    createAndAttachLoadingStatus(cityDiv);
     
-    if(marinhaisResults.resolvedAddress) {
-        cityNameP.innerHTML = `${cleanCityNames(marinhaisResults.resolvedAddress)}`;
-        currTempP.innerHTML = `${convertFarToCel(marinhaisResults.days[0].tempmin).toString()}ºC`;
-        currWeatherStatus.innerHTML = `${emojiResults(marinhaisResults.days[0].icon)}`;
-        descriptionWeather.textContent = marinhaisResults.description;
-        
-        cityDiv.appendChild(cityNameP);
-        cityDiv.appendChild(currTempP);
-        cityDiv.appendChild(currWeatherStatus);
-        cityDiv.appendChild(descriptionWeather);
-        gridWeatherResults.appendChild(cityDiv);
-    } else {
-        cityNameP.textContent = `City data for ${cities[0]} not available.`;
-        cityDiv.appendChild(cityNameP);
-        gridWeatherResults.appendChild(cityDiv);
+    // const heroDiv:HTMLElement = document.getElementById('hero-test')!;
+    // createAndAttachLoadingStatus(heroDiv);
+
+    try {
+        setTimeout(() => {
+            cityNameP.innerHTML = 'Sanity test';
+            cityDiv.appendChild(cityNameP);
+        }, 2000);
+        // fetchResults = await fetchWeatherData(cityName);
+    } finally {
+        const loadingElement:HTMLElement = document.getElementById('loading-div-svg')!;
+        // loadingElement.innerHTML = '';
     }
+
+    // if(fetchResults.resolvedAddress) {
+    //     cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress)}`;
+    //     currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
+    //     currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
+    //     descriptionWeather.textContent = fetchResults.description;
+        
+    //     cityDiv.appendChild(cityNameP);
+    //     cityDiv.appendChild(currTempP);
+    //     cityDiv.appendChild(currWeatherStatus);
+    //     cityDiv.appendChild(descriptionWeather);
+    //     gridWeatherResults.appendChild(cityDiv);
+    // } else {
+    //     cityNameP.textContent = `City data for ${cities[0]} not available.`;
+    //     cityDiv.appendChild(cityNameP);
+    //     gridWeatherResults.appendChild(cityDiv);
+    // }
 };
 
 const searchButton: HTMLElement = document.getElementById('search-button')!;
@@ -282,3 +271,6 @@ searchButton?.addEventListener('click', () => {
     searchIndividualStatsCity(cityInputText.value!);
 });
 
+window.onload = () => {
+    initialCitiesLoad();
+}
