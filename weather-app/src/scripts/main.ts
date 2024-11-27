@@ -1,7 +1,5 @@
 // ToDo List:
-    // [ ] Add form validation
-    // [ ] Add favourite cities to know how to work with the LocalStorage
-    // [ ] Add animation when the results are fetched
+    // [ ] Cache the results if the currentDay == dayThatComesFromFetch (LocalStorage)
     // [ ] Add expanding containers when clicking on the containers themselves & add grid with containers inside
     // ------------------------------------------------------------------
     // [ ] Deploy this to GH Pages using the methods shown on TOP or that Medium article
@@ -11,6 +9,7 @@ import { fetchWeatherData, WeatherData } from './weather-app-fetch'
 import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB, delay } from './utils'
 
 const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
+
 let weatherDataResults:WeatherData[] = [];
 let london:WeatherData = {
     resolvedAddress: 'London',
@@ -218,7 +217,7 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     const spinnerCityDivClass:string = ' h-96 mx-auto justify-center text-2xl w-96 flex items-center';
     const cityDivClass:string = 'bg-white shadow rounded-lg p-6 opacity-80 text-xl h-96 mx-auto justify-center text-2xl w-96';
     
-    let fetchResults:WeatherData; // Results from the Weather API call
+    let fetchResults; // Results from the Weather API call
     
     // Clean current div containing the default cities
     const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
@@ -248,8 +247,9 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     createAndAttachLoadingStatus(cityDiv);
     
     try {
-        await delay(2000);
+        // await delay(2000);
         fetchResults = await fetchWeatherData(cityName);
+        console.log(fetchResults);
     } finally {
         const loadingElement:HTMLElement = document.getElementById('loading-div-svg')!;
         cityDiv.removeChild(loadingElement);
@@ -261,8 +261,9 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     // Deserialize fetch into the container of the results
     if(fetchResults.resolvedAddress) {
         cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress)}`;
-        currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
-        currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
+        // currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
+        // currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
+        
         descriptionWeather.textContent = fetchResults.description;
         
         cityDiv.appendChild(cityNameP);
@@ -276,7 +277,6 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
         gridWeatherResults.appendChild(cityDiv);
     }
 };
-
 
 const searchButton: HTMLElement = document.getElementById('search-button')!;
 const cityInputText = <HTMLInputElement> document.getElementById('city-search-term')!;
