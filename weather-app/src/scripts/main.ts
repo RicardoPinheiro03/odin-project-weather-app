@@ -1,8 +1,7 @@
 // ToDo List:
-    // [ ] Cache the results if the currentDay == dayThatComesFromFetch (LocalStorage)
     // [ ] Add expanding containers when clicking on the containers themselves & add grid with containers inside
     // ------------------------------------------------------------------
-    // [ ] Deploy this to GH Pages using the methods shown on TOP or that Medium article
+    // [ ] Deploy this to GH Pages
 
 import '../styles/style.css'
 import { retrieveWeatherData, WeatherData } from './weather-app-fetch'
