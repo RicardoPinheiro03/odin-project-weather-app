@@ -7,5 +7,6 @@ export default defineConfig({
     },
     plugins: [TurboConsole({
         // options for turboconsole here.
-    })]
+    })],
+    base: "/weather-app/"
   });
