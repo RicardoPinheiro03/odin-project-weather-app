@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+  </head>
+  <body>
+    <!-- Scripts load -->
+    <script type="module" src="/src/scripts/main.ts"></script>
+    <script type="module" src="./src/scripts/navbar-animation.ts"></script>
+    <!-- End scripts load -->
+
+    <!-- Navbar start -->
+    <nav
+      id="navbar"
+      class="fixed top-0 z-40 flex w-full flex-row justify-end bg-gray-700 px-4 sm:justify-between"
+    >
+      <ul class="hidden flex-row items-center py-4 text-lg text-white sm:flex">
+        <li class="inline">
+          <span>Weather App ☀️</span>
+        </li>
+      </ul>
+      <button
+        id="btnSidebarToggler"
+        type="button"
+        class="py-4 text-2xl text-white hover:text-gray-200"
+      >
+        <svg
+          id="navClosed"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          />
+        </svg>
+        <svg
+          id="navOpen"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="hidden h-8 w-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </nav>
+    <!-- Navbar end -->
+
+    <!-- Sidebar start -->
+    <div id="containerSidebar" class="z-40">
+      <div class="navbar-menu relative z-40">
+        <nav
+          id="sidebar"
+          class="fixed left-0 bottom-0 flex w-3/4 -translate-x-full flex-col overflow-y-auto bg-gray-700 pt-6 pb-8 sm:max-w-xs lg:w-80"
+        >
+          <div class="px-4 pb-6">
+            <ul class="mb-8 text-sm font-medium">
+              <li>
+                <a
+                  class="active flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600"
+                  href="/"
+                >
+                  <span class="select-none">Homepage</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600"
+                  href="#link1"
+                >
+                  <span class="select-none">Favourites</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="flex items-center rounded py-3 pl-3 pr-4 text-gray-50 hover:bg-gray-600"
+                  href="#link1"
+                >
+                  <span class="select-none">About</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div class="mx-auto lg:ml-80"></div>
+    </div>
+    <!-- Sidebar end -->
+
+    <!-- Search component start -->
+    <div class="space-y-12 mt-32 justify-center flex" id="search-city-section">
+      <div class="pb-12">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-8">
+            <div
+              class="flex bg-white bg-opacity-45 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+            >
+              <input
+                type="text"
+                id="city-search-term"
+                class="block flex-1 p-12 w-96 h-14 ml-10 border-0 py-1.5 pl-1 text-gray-900 placeholder:text-black focus:ring-0 sm:text-sm/6 bg-transparent"
+                placeholder="Input a city!"
+              />
+              <button class="flex flex-col mr-10 justify-center text-right text-2xl p-2 bg-transparent" id="search-button">🔍</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Search component end -->
+
+    <!-- Main section start -->
+    <main id="main-section-weather-results">
+      <div class="container mt-20 flex mx-auto justify-center" id="container-weather-wrapper">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
+          id="grid-weather-results">
+          
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Main section end -->
+  </body>
+</html>
