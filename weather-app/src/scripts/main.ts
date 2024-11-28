@@ -5,8 +5,8 @@
     // [ ] Deploy this to GH Pages using the methods shown on TOP or that Medium article
 
 import '../styles/style.css'
-import { fetchWeatherData, retrieveWeatherData, WeatherData } from './weather-app-fetch'
-import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB, delay } from './utils'
+import { retrieveWeatherData, WeatherData } from './weather-app-fetch'
+import { cleanCityNames, loadingPathA, loadingPathB, delay } from './utils'
 
 const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
 
