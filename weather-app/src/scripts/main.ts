@@ -5,7 +5,7 @@
     // [ ] Deploy this to GH Pages using the methods shown on TOP or that Medium article
 
 import '../styles/style.css'
-import { fetchWeatherData, WeatherData } from './weather-app-fetch'
+import { fetchWeatherData, retrieveWeatherData, WeatherData } from './weather-app-fetch'
 import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB, delay } from './utils'
 
 const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
@@ -130,10 +130,10 @@ const initialCitiesLoad = async ():Promise<void> => {
     
     try {
         weatherDataResults = await Promise.all(
-            cities.map((cityName) => fetchWeatherData(cityName))
+            cities.map((cityName) => retrieveWeatherData(cityName))
         );
-    } finally {
-        console.log('Something went wrong!');
+    } catch {
+        throw new Error('Something went wrong.');
     }
 
     weatherDataResults.forEach((resultSearch:WeatherData) => {
@@ -247,7 +247,7 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     
     try {
         await delay(3000);
-        fetchResults = await fetchWeatherData(cityName);
+        fetchResults = await retrieveWeatherData(cityName);
     } finally {
         const loadingElement:HTMLElement = document.getElementById('loading-div-svg')!;
         cityDiv.removeChild(loadingElement);
