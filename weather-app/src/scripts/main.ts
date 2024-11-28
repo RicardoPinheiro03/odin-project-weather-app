@@ -10,82 +10,82 @@ import { cleanCityNames, convertFarToCel, loadingPathA, loadingPathB, delay } fr
 
 const cities:string[] = ['london', 'paris', 'berlin', 'madrid', 'lisbon'];
 
-let weatherDataResults:WeatherData[] = [];
-let london:WeatherData = {
-    resolvedAddress: 'London',
-    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-    currentConditions: {
-        feelslike: 0,
-        temp: 0
-    },
-    days: [{
-        icon: 'rain',
-        tempmin: 0.0,
-        tempmax: 0.0
-    }]
-}
+// let weatherDataResults:WeatherData[] = [];
+// let london:WeatherData = {
+//     resolvedAddress: 'London',
+//     description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+//     currentConditions: {
+//         feelslike: 0,
+//         temp: 0
+//     },
+//     days: [{
+//         icon: 'rain',
+//         tempmin: 0.0,
+//         tempmax: 0.0
+//     }]
+// }
 
-let berlin:WeatherData = {
-    resolvedAddress: 'Berlin',
-    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-    currentConditions: {
-        feelslike: 0,
-        temp: 0
-    },
-    days: [{
-        icon: 'clear-day',
-        tempmin: 0.0,
-        tempmax: 0.0
-    }]
-}
+// let berlin:WeatherData = {
+//     resolvedAddress: 'Berlin',
+//     description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+//     currentConditions: {
+//         feelslike: 0,
+//         temp: 0
+//     },
+//     days: [{
+//         icon: 'clear-day',
+//         tempmin: 0.0,
+//         tempmax: 0.0
+//     }]
+// }
 
-let gloria:WeatherData = {
-    resolvedAddress: 'Glória do Ribatejo',
-    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-    currentConditions: {
-        feelslike: 0,
-        temp: 0
-    },
-    days: [{
-        icon: 'clear-day',
-        tempmin: 0.0,
-        tempmax: 0.0
-    }]
-}
+// let gloria:WeatherData = {
+//     resolvedAddress: 'Glória do Ribatejo',
+//     description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+//     currentConditions: {
+//         feelslike: 0,
+//         temp: 0
+//     },
+//     days: [{
+//         icon: 'clear-day',
+//         tempmin: 0.0,
+//         tempmax: 0.0
+//     }]
+// }
 
-let muge:WeatherData = {
-    resolvedAddress: 'Muge',
-    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-    currentConditions: {
-        feelslike: 0,
-        temp: 0
-    },
-    days: [{
-        icon: 'snow',
-        tempmin: 0.0,
-        tempmax: 0.0
-    }]
-}
+// let muge:WeatherData = {
+//     resolvedAddress: 'Muge',
+//     description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+//     currentConditions: {
+//         feelslike: 0,
+//         temp: 0
+//     },
+//     days: [{
+//         icon: 'snow',
+//         tempmin: 0.0,
+//         tempmax: 0.0
+//     }]
+// }
 
-let porto:WeatherData = {
-    resolvedAddress: 'Porto Alto',
-    description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
-    currentConditions: {
-        feelslike: 0,
-        temp: 0
-    },
-    days: [{
-        icon: 'partly-cloudy-day',
-        tempmin: 0.0,
-        tempmax: 0.0
-    }]
-}
+// let porto:WeatherData = {
+//     resolvedAddress: 'Porto Alto',
+//     description: 'Lorem ipsem. Lorem ipsem. Lorem ipsem. Lorem ipsem.',
+//     currentConditions: {
+//         feelslike: 0,
+//         temp: 0
+//     },
+//     days: [{
+//         icon: 'partly-cloudy-day',
+//         tempmin: 0.0,
+//         tempmax: 0.0
+//     }]
+// }
 
-weatherDataResults.push(london);
-weatherDataResults.push(berlin);
-weatherDataResults.push(gloria);
-weatherDataResults.push(muge);
-weatherDataResults.push(porto);
+// weatherDataResults.push(london);
+// weatherDataResults.push(berlin);
+// weatherDataResults.push(gloria);
+// weatherDataResults.push(muge);
+// weatherDataResults.push(porto);
 
 const emojiResults = (desc:string):string => {
     let result:string = '';
@@ -117,7 +117,7 @@ const createEmptyCityDiv = (containerLoadDiv: HTMLElement, id: number):void => {
 const initialCitiesLoad = async ():Promise<void> => {
     let idxCity: number = 0;
     let idxCityDivSearch: number = 0;
-    // let weatherDataResults:WeatherData[];
+    let weatherDataResults:WeatherData[];
     const gridWeatherResults:HTMLElement = document.getElementById('grid-weather-results')!;
     
     // Create initial containers
@@ -128,14 +128,13 @@ const initialCitiesLoad = async ():Promise<void> => {
         // createAndAttachLoadingStatus(emptyCityDiv);
     }
     
-    // try {
-    //     weatherDataResults = await Promise.all(
-    //         cities.map((cityName) => fetchWeatherData(cityName))
-    //     );
-    // }
-    // finally {
-    //     // document.getElementById('loading-div-svg').innerHTML = '';
-    // }
+    try {
+        weatherDataResults = await Promise.all(
+            cities.map((cityName) => fetchWeatherData(cityName))
+        );
+    } finally {
+        console.log('Something went wrong!');
+    }
 
     weatherDataResults.forEach((resultSearch:WeatherData) => {
         // The below code should be in a different method.
@@ -151,10 +150,10 @@ const initialCitiesLoad = async ():Promise<void> => {
         currWeatherStatus.style.textAlign = 'center';
         currWeatherStatus.style.fontSize = '40px';
         
-        if(resultSearch.resolvedAddress) {
+        if(resultSearch.resolvedAddress && resultSearch.days != null) {
             cityNameP.innerHTML = `${cleanCityNames(resultSearch.resolvedAddress)}`;
-            currTempP.innerHTML = `${convertFarToCel(resultSearch.days[0].tempmin).toString()}ºC`;
-            currWeatherStatus.innerHTML = `${emojiResults(resultSearch.days[0].icon)}`;
+            currTempP.innerHTML = `${resultSearch.currentConditions?.temp!.toString()}ºC`;
+            currWeatherStatus.innerHTML = `${emojiResults(resultSearch.days[0].icon!)}`;
             descriptionWeather.textContent = resultSearch.description;
             
             cityDiv.appendChild(cityNameP);
@@ -247,9 +246,8 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     createAndAttachLoadingStatus(cityDiv);
     
     try {
-        // await delay(2000);
+        await delay(3000);
         fetchResults = await fetchWeatherData(cityName);
-        console.log(fetchResults);
     } finally {
         const loadingElement:HTMLElement = document.getElementById('loading-div-svg')!;
         cityDiv.removeChild(loadingElement);
@@ -259,11 +257,10 @@ const searchIndividualStatsCity = async (cityName: string): Promise<void> => {
     }
 
     // Deserialize fetch into the container of the results
-    if(fetchResults.resolvedAddress) {
-        cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress)}`;
-        // currTempP.innerHTML = `${convertFarToCel(fetchResults.days[0].tempmin).toString()}ºC`;
-        // currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon)}`;
-        
+    if(fetchResults != null && fetchResults.days) {
+        cityNameP.innerHTML = `${cleanCityNames(fetchResults.resolvedAddress!)}`;
+        currTempP.innerHTML = `${fetchResults.currentConditions?.temp!.toString()}ºC`;
+        currWeatherStatus.innerHTML = `${emojiResults(fetchResults.days[0].icon!)}`;
         descriptionWeather.textContent = fetchResults.description;
         
         cityDiv.appendChild(cityNameP);
