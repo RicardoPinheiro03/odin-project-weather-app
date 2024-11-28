@@ -20,5 +20,15 @@
     "typescript": "~5.6.2",
     "unplugin-turbo-console": "^1.10.4",
     "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.2.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "~5.6.2",
+    "unplugin-turbo-console": "^1.10.4",
+    "vite": "^5.4.10"
   }
 }
