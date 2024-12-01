@@ -76,15 +76,13 @@ const fetchWeatherData = async(cityToFetch:String):Promise<WeatherData> => {
 const retrieveWeatherData = async(cityToFetch:String):Promise<WeatherData> => {   
     let weatherDataResult: WeatherData = new WeatherData(null, null, null, null);
     const cityLocalStorage = localStorage.getItem(cityToFetch.toString())!;
-    const dataLocalStg:WeatherData = JSON.parse(cityLocalStorage) as WeatherData;       
+    const dataLocalStg:WeatherData = JSON.parse(cityLocalStorage) as WeatherData;
     
-    if(cityLocalStorage != null) {
-        if(dataLocalStg.days != null && (dataLocalStg.days[0].datetime!) === getCurrentDate()) {
-            weatherDataResult = dataLocalStg;
-        } 
-    } else {
+    if(cityLocalStorage === null || dataLocalStg.days != null && (dataLocalStg.days[0].datetime!) !== getCurrentDate()) {
         weatherDataResult = await fetchWeatherData(cityToFetch);
         localStorage.setItem(cityToFetch.toString(), JSON.stringify(weatherDataResult));
+    } else {
+        weatherDataResult = dataLocalStg;
     }
 
     return weatherDataResult;
